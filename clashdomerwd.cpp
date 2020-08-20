@@ -1,6 +1,6 @@
-#include "testrewardwx.hpp"
+#include "clashdomerwd.hpp"
 
-void testrewardwx::claim(uint64_t id, vector<name> winners)
+void clashdomerwd::claim(uint64_t id, vector<name> winners)
 {
     require_auth(_self);
 
@@ -17,7 +17,7 @@ void testrewardwx::claim(uint64_t id, vector<name> winners)
     _rw.erase(rw_itr);
 }
 
-void testrewardwx::remove(uint64_t id)
+void clashdomerwd::remove(uint64_t id)
 {
     require_auth(_self);
 
@@ -29,7 +29,7 @@ void testrewardwx::remove(uint64_t id)
      _rw.erase(rw_itr);
 }
 
-void testrewardwx::create(uint64_t id, string date, string game)
+void clashdomerwd::create(uint64_t id, string date, string game)
 {
     require_auth(_self);
 
@@ -46,7 +46,7 @@ void testrewardwx::create(uint64_t id, string date, string game)
     });
 }
 
-void testrewardwx::transfer(const name &from, const name &to, const asset &quantity, const string &memo)
+void clashdomerwd::transfer(const name &from, const name &to, const asset &quantity, const string &memo)
 {
     require_auth(from);
 

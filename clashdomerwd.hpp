@@ -18,9 +18,9 @@ using std::vector;
 using std::make_tuple;
 using namespace std;
 
-#define CONTRACTN eosio::name("testrewardwx")
+#define CONTRACTN eosio::name("clashdomerwd")
 
-class [[eosio::contract]] testrewardwx : public eosio::contract
+class [[eosio::contract]] clashdomerwd : public eosio::contract
 {
   public:
     using contract::contract;
@@ -42,7 +42,7 @@ private:
 
     typedef eosio::multi_index<name("rewards"), reward> rewards;
 
-    static constexpr name COMPANY_ACCOUNT = "xzzau.wam"_n;
+    static constexpr name COMPANY_ACCOUNT = "gr.au.wam"_n;
     static constexpr uint32_t PERCENTAGES[] = {45, 27, 18, 10};
     static constexpr name EOS_CONTRACT = "eosio.token"_n;
     static constexpr symbol WAX_SYMBOL = symbol(symbol_code("WAX"), 8);
