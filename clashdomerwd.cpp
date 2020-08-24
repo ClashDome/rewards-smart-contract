@@ -9,10 +9,12 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners)
     auto rw_itr = _rw.find(id);
     check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
 
-    action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[0], rw_itr->quantity * PERCENTAGES[0] / 100, string("claim reward"))).send();
-    action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[1], rw_itr->quantity * PERCENTAGES[1] / 100, string("claim reward"))).send();
-    action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[2], rw_itr->quantity * PERCENTAGES[2] / 100, string("claim reward"))).send();
-    action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * PERCENTAGES[3] / 100, string("claim reward"))).send();
+    if (rw_itr->quantity.amount > 0) {
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[0], rw_itr->quantity * PERCENTAGES[0] / 100, string("claim reward"))).send();
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[1], rw_itr->quantity * PERCENTAGES[1] / 100, string("claim reward"))).send();
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[2], rw_itr->quantity * PERCENTAGES[2] / 100, string("claim reward"))).send();
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * PERCENTAGES[3] / 100, string("claim reward"))).send();   
+    }
 
     _rw.erase(rw_itr);
 }
