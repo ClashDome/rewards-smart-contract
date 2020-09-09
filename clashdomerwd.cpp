@@ -10,13 +10,11 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners)
     check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
 
     if (rw_itr->quantity.amount > 0) {
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[0], rw_itr->quantity * PERCENTAGES[0] / 100, string("claim reward"))).send();
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[1], rw_itr->quantity * PERCENTAGES[1] / 100, string("claim reward"))).send();
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[2], rw_itr->quantity * PERCENTAGES[2] / 100, string("claim reward"))).send();
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * PERCENTAGES[3] / 100, string("claim reward"))).send();   
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[0], rw_itr->quantity * PERCENTAGES[0] / 100, string("Endless Siege - 1st classified"))).send();
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[1], rw_itr->quantity * PERCENTAGES[1] / 100, string("Endless Siege - 2nd classified"))).send();
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[2], rw_itr->quantity * PERCENTAGES[2] / 100, string("Endless Siege - 3rd classified"))).send();
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * PERCENTAGES[3] / 100, string("Endless Siege - Commission"))).send();   
     }
-
-    _rw.erase(rw_itr);
 }
 
 void clashdomerwd::remove(uint64_t id)
@@ -60,7 +58,7 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
     check(to == _self, "contract is not involved in this transfer");
     check(quantity.symbol.is_valid(), "invalid quantity");
     check(quantity.amount > 0, "only positive quantity allowed");
-    check(quantity.symbol == WAX_SYMBOL, "only EOS tokens allowed");
+    check(quantity.symbol == WAX_SYMBOL, "only WAX tokens allowed");
 
     rewards _rw(CONTRACTN, CONTRACTN.value);
     auto rw_itr = _rw.find(std::atoi(memo.c_str()));
