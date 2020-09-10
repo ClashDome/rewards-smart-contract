@@ -25,9 +25,10 @@ class [[eosio::contract]] clashdomerwd : public eosio::contract
   public:
     using contract::contract;
 
-    ACTION claim(uint64_t id, vector<name> winners);
+    ACTION claim(uint64_t id, vector<name> winners, vector<uint32_t> rewards_percentages);
     ACTION remove(uint64_t id);
     ACTION create(uint64_t id, string date, string game);
+    ACTION update(uint64_t id, const asset &quantity);
     [[eosio::on_notify("eosio.token::transfer")]] void transfer(const name &from, const name &to, const asset &quantity, const string &memo);
 
 private:
@@ -43,7 +44,6 @@ private:
     typedef eosio::multi_index<name("rewards"), reward> rewards;
 
     static constexpr name COMPANY_ACCOUNT = "gr.au.wam"_n;
-    static constexpr uint32_t PERCENTAGES[] = {45, 27, 18, 10};
     static constexpr name EOS_CONTRACT = "eosio.token"_n;
     static constexpr symbol WAX_SYMBOL = symbol(symbol_code("WAX"), 8);
 };

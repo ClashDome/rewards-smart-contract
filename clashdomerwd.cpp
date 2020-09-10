@@ -1,6 +1,6 @@
 #include "clashdomerwd.hpp"
 
-void clashdomerwd::claim(uint64_t id, vector<name> winners)
+void clashdomerwd::claim(uint64_t id, vector<name> winners, vector<uint32_t> rewards_percentages)
 {
     require_auth(_self);
 
@@ -9,11 +9,16 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners)
     auto rw_itr = _rw.find(id);
     check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
 
+    uint32_t commission_percetage = 100;
+
     if (rw_itr->quantity.amount > 0) {
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[0], rw_itr->quantity * PERCENTAGES[0] / 100, string("Endless Siege - 1st classified"))).send();
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[1], rw_itr->quantity * PERCENTAGES[1] / 100, string("Endless Siege - 2nd classified"))).send();
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[2], rw_itr->quantity * PERCENTAGES[2] / 100, string("Endless Siege - 3rd classified"))).send();
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * PERCENTAGES[3] / 100, string("Endless Siege - Commission"))).send();   
+
+        for(int i = 0; i < rewards_percentages.size(); i++) {
+            action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[i], rw_itr->quantity * rewards_percentages[i] / 100, string("Endless Siege - " + to_string(i + 1) + " classified"))).send();
+            commission_percetage -= rewards_percentages[i];
+        }
+
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * commission_percetage / 100, string("Endless Siege - Commission"))).send();   
     }
 }
 
@@ -43,6 +48,20 @@ void clashdomerwd::create(uint64_t id, string date, string game)
         new_board.date = date;
         new_board.game = game;
         new_board.quantity = asset(0, WAX_SYMBOL);
+    });
+}
+
+void clashdomerwd::update(uint64_t id, const asset &quantity)
+{
+    require_auth(_self);
+
+    rewards _rw(CONTRACTN, CONTRACTN.value);
+
+    auto rw_itr = _rw.find(id);
+    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
+
+    _rw.modify(rw_itr, get_self(), [quantity](auto &a) {
+        a.quantity = quantity;
     });
 }
 
