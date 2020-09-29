@@ -84,7 +84,41 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
 
     check(rw_itr != _rw.end(), "Reward with " + memo + " id doesn't exist!");
 
+    uint64_t timestamp = eosio::current_time_point().sec_since_epoch();
+
+    uint64_t pos = finder(rw_itr->payments, from);
+
+    if (pos == -1)
+    {
+
+        vector<uint64_t> timestamps;
+        timestamps.push_back(timestamp); 
+        pos = rw_itr->payments.size();
+        _rw.modify(rw_itr, get_self(), [&](auto &mod_board) {
+            mod_board.payments.push_back({
+                from,
+                timestamps
+            });
+        });
+    } else {
+        _rw.modify(rw_itr, get_self(), [&](auto &mod_board) {
+            mod_board.payments.at(pos).timestamps.push_back(timestamp); 
+        });
+    }
+
     _rw.modify(rw_itr, get_self(), [quantity](auto &a) {
         a.quantity += quantity;
     });
+}
+
+uint64_t clashdomerwd::finder(vector<player> payments, eosio::name account)
+{
+    for (uint64_t i = 0; i < payments.size(); i++)
+    {
+        if (payments.at(i).account == account)
+        {
+            return i;
+        }
+    }
+    return -1;
 }

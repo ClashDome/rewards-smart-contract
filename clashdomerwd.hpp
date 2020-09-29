@@ -33,11 +33,18 @@ class [[eosio::contract]] clashdomerwd : public eosio::contract
 
 private:
 
+    struct player
+    {
+      eosio::name account;          //user wax account
+      vector<uint64_t> timestamps;   //payment times
+    };
+
     TABLE reward {
         uint64_t id; 
         string date;       //date of leaderboard
         string game;       //game of leaderboard
         asset quantity;
+        vector<player>  payments; 
         uint64_t primary_key() const { return id; }
     };
 
@@ -46,4 +53,6 @@ private:
     static constexpr name COMPANY_ACCOUNT = "gr.au.wam"_n;
     static constexpr name EOS_CONTRACT = "eosio.token"_n;
     static constexpr symbol WAX_SYMBOL = symbol(symbol_code("WAX"), 8);
+
+    uint64_t finder(vector<player> payments, eosio::name account);
 };

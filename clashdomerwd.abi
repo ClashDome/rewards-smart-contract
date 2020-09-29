@@ -40,6 +40,20 @@
             ]
         },
         {
+            "name": "player",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "timestamps",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
             "name": "remove",
             "base": "",
             "fields": [
@@ -68,6 +82,10 @@
                 {
                     "name": "quantity",
                     "type": "asset"
+                },
+                {
+                    "name": "payments",
+                    "type": "player[]"
                 }
             ]
         },
