@@ -11,14 +11,22 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners, vector<uint32_t> rew
 
     uint32_t commission_percetage = 100;
 
+    string game_name = "";
+
+    if (rw_itr->game == "endless-siege") {
+        game_name = "Endless Siege";
+    } else {
+        game_name = "Candy Fiesta";
+    }
+
     if (rw_itr->quantity.amount > 0) {
 
         for(int i = 0; i < rewards_percentages.size(); i++) {
-            action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[i], rw_itr->quantity * rewards_percentages[i] / 100, string("Endless Siege - " + to_string(i + 1) + " classified"))).send();
+            action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[i], rw_itr->quantity * rewards_percentages[i] / 100, string(game_name + " - " + to_string(i + 1) + " classified"))).send();
             commission_percetage -= rewards_percentages[i];
         }
 
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * commission_percetage / 100, string("Endless Siege - Commission"))).send();   
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * commission_percetage / 100, string(game_name + " - Commission"))).send();   
     }
 }
 
@@ -90,7 +98,6 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
 
     if (pos == -1)
     {
-
         vector<uint64_t> timestamps;
         timestamps.push_back(timestamp); 
         pos = rw_itr->payments.size();
@@ -101,6 +108,11 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
             });
         });
     } else {
+
+        uint64_t old_timestamp = rw_itr->payments.at(pos).timestamps.back();
+
+        check(old_timestamp + 120 < timestamp, "A payment cannot be made in less than 2 minutes.");
+
         _rw.modify(rw_itr, get_self(), [&](auto &mod_board) {
             mod_board.payments.at(pos).timestamps.push_back(timestamp); 
         });
