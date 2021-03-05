@@ -29,6 +29,7 @@ class [[eosio::contract]] clashdomerwd : public eosio::contract
     ACTION remove(uint64_t id);
     ACTION create(uint64_t id, string date, string game);
     ACTION update(uint64_t id, const asset &quantity);
+    ACTION freeticket(uint64_t id, const asset &quantity, const name &account);
     [[eosio::on_notify("eosio.token::transfer")]] void transfer(const name &from, const name &to, const asset &quantity, const string &memo);
 
 private:

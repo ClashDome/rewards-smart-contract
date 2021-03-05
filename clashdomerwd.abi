@@ -40,6 +40,24 @@
             ]
         },
         {
+            "name": "freeticket",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
             "name": "player",
             "base": "",
             "fields": [
@@ -113,6 +131,11 @@
         {
             "name": "create",
             "type": "create",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "freeticket",
+            "type": "freeticket",
             "ricardian_contract": ""
         },
         {

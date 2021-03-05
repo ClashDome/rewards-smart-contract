@@ -73,6 +73,20 @@ void clashdomerwd::update(uint64_t id, const asset &quantity)
     });
 }
 
+void clashdomerwd::freeticket(uint64_t id, const asset &quantity, const name &account)
+{
+    require_auth(_self);
+
+    rewards _rw(CONTRACTN, CONTRACTN.value);
+
+    auto rw_itr = _rw.find(id);
+    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
+
+    _rw.modify(rw_itr, get_self(), [&](auto &a) {
+        a.quantity += quantity;
+    });
+}
+
 void clashdomerwd::transfer(const name &from, const name &to, const asset &quantity, const string &memo)
 {
     require_auth(from);
