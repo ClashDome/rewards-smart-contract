@@ -7,9 +7,9 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners, vector<uint32_t> rew
     rewards _rw(CONTRACTN, CONTRACTN.value);
 
     auto rw_itr = _rw.find(id);
-    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
+    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id does not exist!");
 
-    uint32_t commission_percetage = 100;
+    uint32_t commission_percentage = 100;
 
     string game_name = "";
 
@@ -23,10 +23,10 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners, vector<uint32_t> rew
 
         for(int i = 0; i < rewards_percentages.size(); i++) {
             action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, winners[i], rw_itr->quantity * rewards_percentages[i] / 100, string(game_name + " - " + to_string(i + 1) + " classified"))).send();
-            commission_percetage -= rewards_percentages[i];
+            commission_percentage -= rewards_percentages[i];
         }
 
-        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * commission_percetage / 100, string(game_name + " - Commission"))).send();   
+        action(permission_level{_self, "active"_n}, EOS_CONTRACT, "transfer"_n, make_tuple(_self, COMPANY_ACCOUNT, rw_itr->quantity * commission_percentage / 100, string(game_name + " - Commission"))).send();   
     }
 }
 
