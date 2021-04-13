@@ -7,7 +7,7 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners, vector<uint32_t> rew
     rewards _rw(CONTRACTN, CONTRACTN.value);
 
     auto rw_itr = _rw.find(id);
-    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id does not exist!");
+    check(rw_itr != _rw.end(), "Tournament with " + to_string(id) + " id does not exist!");
 
     uint32_t commission_percentage = 100;
 
@@ -37,7 +37,7 @@ void clashdomerwd::remove(uint64_t id)
     rewards _rw(CONTRACTN, CONTRACTN.value);
 
     auto rw_itr = _rw.find(id);
-    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
+    check(rw_itr != _rw.end(), "Tournament with " + to_string(id) + " id doesn't exist!");
 
      _rw.erase(rw_itr);
 }
@@ -49,7 +49,7 @@ void clashdomerwd::create(uint64_t id, string date, string game)
     rewards _rw(CONTRACTN, CONTRACTN.value);
 
     auto rw_itr = _rw.find(id);
-    check(rw_itr == _rw.end(), "Reward with " + to_string(id) + " id already exists!");
+    check(rw_itr == _rw.end(), "Tournament with " + to_string(id) + " id already exists!");
 
     _rw.emplace(CONTRACTN, [&](auto& new_board) {
         new_board.id = id;
@@ -66,7 +66,7 @@ void clashdomerwd::update(uint64_t id, const asset &quantity)
     rewards _rw(CONTRACTN, CONTRACTN.value);
 
     auto rw_itr = _rw.find(id);
-    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
+    check(rw_itr != _rw.end(), "Tournament with " + to_string(id) + " id doesn't exist!");
 
     _rw.modify(rw_itr, get_self(), [quantity](auto &a) {
         a.quantity = quantity;
@@ -80,7 +80,7 @@ void clashdomerwd::freeticket(uint64_t id, const asset &quantity, const name &ac
     rewards _rw(CONTRACTN, CONTRACTN.value);
 
     auto rw_itr = _rw.find(id);
-    check(rw_itr != _rw.end(), "Reward with " + to_string(id) + " id doesn't exist!");
+    check(rw_itr != _rw.end(), "Tournament with " + to_string(id) + " id doesn't exist!");
 
     _rw.modify(rw_itr, get_self(), [&](auto &a) {
         a.quantity += quantity;
@@ -104,7 +104,7 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
     rewards _rw(CONTRACTN, CONTRACTN.value);
     auto rw_itr = _rw.find(std::atoi(memo.c_str()));
 
-    check(rw_itr != _rw.end(), "Reward with " + memo + " id doesn't exist!");
+    check(rw_itr != _rw.end(), "Tournament with " + memo + " id doesn't exist!");
 
     uint64_t timestamp = eosio::current_time_point().sec_since_epoch();
 
@@ -125,7 +125,7 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
 
         uint64_t old_timestamp = rw_itr->payments.at(pos).timestamps.back();
 
-        check(old_timestamp + 120 < timestamp, "A payment cannot be made in less than 2 minutes.");
+        check(old_timestamp + 120 < timestamp, "Another payment can't be conducted within a 2 minutes period.");
 
         _rw.modify(rw_itr, get_self(), [&](auto &mod_board) {
             mod_board.payments.at(pos).timestamps.push_back(timestamp); 
