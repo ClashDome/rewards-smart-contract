@@ -11,13 +11,7 @@ void clashdomerwd::claim(uint64_t id, vector<name> winners, vector<uint32_t> rew
 
     uint32_t commission_percetage = 100;
 
-    string game_name = "";
-
-    if (rw_itr->game == "endless-siege") {
-        game_name = "Endless Siege";
-    } else {
-        game_name = "Candy Fiesta";
-    }
+    string game_name = rw_itr->game;
 
     if (rw_itr->quantity.amount > 0) {
 
