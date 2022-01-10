@@ -92,7 +92,7 @@ void clashdomerwd::transfer(const name &from, const name &to, const asset &quant
     check(EOS_CONTRACT == get_first_receiver(), "invalid contract");
     check(to == _self, "contract is not involved in this transfer");
     check(quantity.symbol.is_valid(), "invalid quantity");
-    check(quantity.amount > 0, "only positive quantity allowed");
+    check(quantity.amount >= 1000000000, "only positive quantity allowed");
     check(quantity.symbol == WAX_SYMBOL, "only WAX tokens allowed");
 
     rewards _rw(CONTRACTN, CONTRACTN.value);
